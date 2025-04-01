@@ -1,11 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"log"
 )
 
 type Game struct{}
@@ -15,19 +12,27 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	newGame := true
+	var tileData grid
+	if newGame {
+		tileData = updateTileData(newGame, tileData)
+		newGame = false
+	} else {
+		tileData = updateTileData(newGame, tileData)
+	}
+	positionClicked()
+	calcTileClicked()
 	current := 16
 	maxSize := 144
+	i := 0
 	for x := current; x <= maxSize; x += current {
 		for y := current; y <= maxSize; y += current {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
-			screen.DrawImage(tileImages[0], op)
+			screen.DrawImage(tileImages[tileData.tiles[i].tileImage], op)
+			i += 1
 		}
 	}
-	positionClicked()
-	calcTileClicked()
-	locX, locY := updateTileImage()
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("tile %i, %i ", locX, locY))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

@@ -1,14 +1,13 @@
 package main
 
-import "fmt"
-
 type tile struct {
 	x             int
 	y             int
 	isMine        bool
-	isCovered     bool
+	isUncovered   bool
 	isFlagged     bool
 	neighborMines int
+	tileImage     int
 }
 
 func (t *tile) updateTile(x, y int) {
@@ -20,27 +19,27 @@ type grid struct {
 	tiles []tile
 }
 
-func (g *grid) populateGrid() {
+func (gr *grid) populateGrid() {
 	t := tile{}
 	current := 16
 	maxSize := 144
 	for x := current; x <= maxSize; x += current {
 		for y := current; y <= maxSize; y += current {
 			t.updateTile((x-16)/16, (y-16)/16)
-			g.tiles = append(g.tiles, t)
+			gr.tiles = append(gr.tiles, t)
 		}
 	}
 }
 
-func (g *grid) checkGrid() (int, int) {
+func (gr *grid) checkGrid() grid {
 	xLoc, yLoc := calcTileClicked()
-	for t := range g.tiles {
-		if g.tiles[t].x == xLoc && g.tiles[t].y == yLoc {
-			fmt.Println("clicked the tile", xLoc, yLoc)
-			return xLoc, yLoc
+	for t := range gr.tiles {
+		if gr.tiles[t].x == xLoc && gr.tiles[t].y == yLoc {
+			gr.tiles[t].isUncovered = true
+			gr.tiles[t].tileImage = 1
 		}
 	}
-	return -1, -1
+	return *gr
 }
 
 func calcTileClicked() (int, int) {
@@ -49,8 +48,11 @@ func calcTileClicked() (int, int) {
 	return xLoc, yLoc
 }
 
-func updateTileImage() (int, int) {
-	g := grid{}
-	g.populateGrid()
-	return g.checkGrid()
+func updateTileData(newGame bool, gr grid) grid {
+	if newGame {
+		gr := grid{}
+		gr.populateGrid()
+		return gr.checkGrid()
+	}
+	return gr.checkGrid()
 }
