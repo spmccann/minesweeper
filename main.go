@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"image/color"
 	"log"
 )
 
@@ -13,12 +12,18 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{52, 40, 145, 1})
-	screen.DrawImage(tileImages[0], nil)
+	for x := 16; x <= 144; x += 16 {
+		for y := 16; y <= 144; y += 16 {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(float64(x), float64(y))
+			screen.DrawImage(tileImages[0], op)
+		}
+	}
+	debugMouse(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 144, 144
+	return 176, 176
 }
 
 func main() {
