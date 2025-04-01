@@ -1,8 +1,11 @@
 package main
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
+	"fmt"
 	"log"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 type Game struct{}
@@ -22,7 +25,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		}
 	}
 	positionClicked()
-	calcTile()
+	calcTileClicked()
+	locX, locY := updateTileImage()
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("tile %i, %i ", locX, locY))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
