@@ -12,14 +12,17 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	for x := 16; x <= 144; x += 16 {
-		for y := 16; y <= 144; y += 16 {
+	current := 16
+	maxSize := 144
+	for x := current; x <= maxSize; x += current {
+		for y := current; y <= maxSize; y += current {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
 			screen.DrawImage(tileImages[0], op)
 		}
 	}
-	debugMouse(screen)
+	positionClicked()
+	calcTile()
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
