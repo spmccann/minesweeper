@@ -10,6 +10,7 @@ type Game struct {
 	newGame   bool
 	tileData  grid
 	mouseData input
+	graphics  graphic
 }
 
 func (g *Game) Update() error {
@@ -17,6 +18,8 @@ func (g *Game) Update() error {
 	if g.newGame {
 		g.mouseData = newInput()
 		g.tileData = newGameTileData(g.newGame)
+		g.graphics.init()
+		g.graphics.createTileImages(g.graphics.sprites)
 		g.newGame = false
 	} else {
 		g.tileData = updateTileData(g.tileData, g.mouseData.tileClick)
@@ -32,7 +35,9 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		for y := current; y <= maxSize; y += current {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
-			screen.DrawImage(tileImages[g.tileData.tiles[i].tileImage], op)
+			imgNum := g.tileData.tiles[i].tileImage
+
+			screen.DrawImage(g.graphics.tileImages[imgNum], op)
 			i += 1
 		}
 	}
@@ -43,7 +48,6 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	createTileImages(sprites)
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Minesweeper")
 	if err := ebiten.RunGame(&Game{newGame: true}); err != nil {

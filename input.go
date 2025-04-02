@@ -1,14 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
-
-//var locationClicked [2]int
 
 type input struct {
 	locClick               [2]int
@@ -24,11 +18,6 @@ func newInput() input {
 		mousePreviouslyPressed: false,
 		tileWhenPressed:        [2]int{-3, -3},
 	}
-}
-
-func (i *input) debugMouse(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, strconv.FormatBool(ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)))
-	fmt.Println(ebiten.CursorPosition())
 }
 
 func (i *input) tileClicked() {

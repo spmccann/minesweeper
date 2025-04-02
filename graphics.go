@@ -8,23 +8,25 @@ import (
 	"log"
 )
 
-var sprites *ebiten.Image
-var tileImages []*ebiten.Image
+type graphic struct {
+	sprites    *ebiten.Image
+	tileImages []*ebiten.Image
+}
 
-func init() {
+func (gs *graphic) init() {
 	var err error
-	sprites, _, err = ebitenutil.NewImageFromFile("assets/sprite_sheet.png")
+	gs.sprites, _, err = ebitenutil.NewImageFromFile("assets/sprite_sheet.png")
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func createTileImages(img *ebiten.Image) {
+func (gs *graphic) createTileImages(img *ebiten.Image) {
 	for x := 0; x <= 48; x += 16 {
 		for y := 0; y <= 48; y += 16 {
 			part := img.SubImage(image.Rect(x, y, x+16, y+16))
 			newTile := ebiten.NewImageFromImage(part)
-			tileImages = append(tileImages, newTile)
+			gs.tileImages = append(gs.tileImages, newTile)
 		}
 	}
 }
