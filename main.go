@@ -17,6 +17,8 @@ func (g *Game) Update() error {
 	if g.newGame {
 		g.mouseData = newInput()
 
+		g.tileData = newGrid()
+
 		g.tileData.populateGrid()
 
 		g.graphics.init()

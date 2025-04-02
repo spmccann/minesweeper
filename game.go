@@ -26,15 +26,23 @@ func newTile() tile {
 }
 
 type grid struct {
-	tiles []tile
+	tiles    []tile
+	tileSize int
+	gridSize int
+}
+
+func newGrid() grid {
+	return grid{
+		tiles:    []tile{},
+		tileSize: 16,
+		gridSize: 144,
+	}
 }
 
 func (gr *grid) populateGrid() {
 	t := newTile()
-	current := 16
-	maxSize := 144
-	for x := current; x <= maxSize; x += current {
-		for y := current; y <= maxSize; y += current {
+	for x := gr.tileSize; x <= gr.gridSize; x += gr.tileSize {
+		for y := gr.tileSize; y <= gr.gridSize; y += gr.tileSize {
 			t.updateTile((x-16)/16, (y-16)/16)
 			gr.tiles = append(gr.tiles, t)
 		}
