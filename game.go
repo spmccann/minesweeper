@@ -50,13 +50,3 @@ func (gr *grid) checkGrid(tileClick [2]int) grid {
 	}
 	return *gr
 }
-
-func updateTileData(gr grid, tileClick [2]int) grid {
-	return gr.checkGrid(tileClick)
-}
-
-func newGameTileData(newGame bool) grid {
-	gr := grid{}
-	gr.populateGrid()
-	return gr
-}

@@ -21,10 +21,10 @@ func (gs *graphic) init() {
 	}
 }
 
-func (gs *graphic) createTileImages(img *ebiten.Image) {
+func (gs *graphic) createTileImages() {
 	for x := 0; x <= 48; x += 16 {
 		for y := 0; y <= 48; y += 16 {
-			part := img.SubImage(image.Rect(x, y, x+16, y+16))
+			part := gs.sprites.SubImage(image.Rect(x, y, x+16, y+16))
 			newTile := ebiten.NewImageFromImage(part)
 			gs.tileImages = append(gs.tileImages, newTile)
 		}

@@ -28,9 +28,27 @@ func (i *input) tileClicked() {
 	i.tileClick[1] = (i.locClick[1] - 16) / 16
 }
 
+func (i *input) clickPress() {
+	mousePosX, mousePosY := ebiten.CursorPosition()
+	mousePresssed := ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	if mousePresssed == true && i.mousePreviouslyPressed == false {
+		i.tileWhenPressed = [2]int{(mousePosX - 16) / 16, (mousePosY - 16) / 16}
+	}
+}
+
+func (i *input) comparePosition() bool {
+	mousePosX, mousePosY := ebiten.CursorPosition()
+	currentPos := [2]int{(mousePosX - 16) / 16, (mousePosY - 16) / 16}
+	if i.tileWhenPressed == currentPos {
+		return true
+	}
+	return false
+}
+
 func (i *input) clickRelease() {
 	mousePresssed := ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
-	if !mousePresssed && i.mousePreviouslyPressed == true {
+	i.clickPress()
+	if !mousePresssed && i.mousePreviouslyPressed && i.comparePosition() {
 		i.tileClicked()
 	}
 	i.mousePreviouslyPressed = mousePresssed

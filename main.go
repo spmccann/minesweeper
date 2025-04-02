@@ -14,16 +14,18 @@ type Game struct {
 }
 
 func (g *Game) Update() error {
-	g.mouseData.clickRelease()
 	if g.newGame {
 		g.mouseData = newInput()
-		g.tileData = newGameTileData(g.newGame)
+
+		g.tileData.populateGrid()
+
 		g.graphics.init()
-		g.graphics.createTileImages(g.graphics.sprites)
+		g.graphics.createTileImages()
+
 		g.newGame = false
-	} else {
-		g.tileData = updateTileData(g.tileData, g.mouseData.tileClick)
 	}
+	g.mouseData.clickRelease()
+	g.tileData.checkGrid(g.mouseData.tileClick)
 	return nil
 }
 
