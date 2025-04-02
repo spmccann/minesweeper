@@ -15,12 +15,22 @@ func (t *tile) updateTile(x, y int) {
 	t.y = y
 }
 
+func newTile() tile {
+	return tile{
+		x:             -1,
+		y:             -1,
+		isMine:        false,
+		neighborMines: -1,
+		tileImage:     0,
+	}
+}
+
 type grid struct {
 	tiles []tile
 }
 
 func (gr *grid) populateGrid() {
-	t := tile{}
+	t := newTile()
 	current := 16
 	maxSize := 144
 	for x := current; x <= maxSize; x += current {
@@ -31,10 +41,9 @@ func (gr *grid) populateGrid() {
 	}
 }
 
-func (gr *grid) checkGrid() grid {
-	xLoc, yLoc := calcTileClicked()
+func (gr *grid) checkGrid(tileClick [2]int) grid {
 	for t := range gr.tiles {
-		if gr.tiles[t].x == xLoc && gr.tiles[t].y == yLoc {
+		if gr.tiles[t].x == tileClick[0] && gr.tiles[t].y == tileClick[1] {
 			gr.tiles[t].isUncovered = true
 			gr.tiles[t].tileImage = 1
 		}
@@ -42,17 +51,12 @@ func (gr *grid) checkGrid() grid {
 	return *gr
 }
 
-func calcTileClicked() (int, int) {
-	xLoc := (locationClicked[0] - 16) / 16
-	yLoc := (locationClicked[1] - 16) / 16
-	return xLoc, yLoc
+func updateTileData(gr grid, tileClick [2]int) grid {
+	return gr.checkGrid(tileClick)
 }
 
-func updateTileData(newGame bool, gr grid) grid {
-	if newGame {
-		gr := grid{}
-		gr.populateGrid()
-		return gr.checkGrid()
-	}
-	return gr.checkGrid()
+func newGameTileData(newGame bool) grid {
+	gr := grid{}
+	gr.populateGrid()
+	return gr
 }

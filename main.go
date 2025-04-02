@@ -1,27 +1,30 @@
 package main
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"log"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type Game struct{}
+type Game struct {
+	newGame   bool
+	tileData  grid
+	mouseData input
+}
 
 func (g *Game) Update() error {
+	g.mouseData.clickRelease()
+	if g.newGame {
+		g.mouseData = newInput()
+		g.tileData = newGameTileData(g.newGame)
+		g.newGame = false
+	} else {
+		g.tileData = updateTileData(g.tileData, g.mouseData.tileClick)
+	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	newGame := true
-	var tileData grid
-	if newGame {
-		tileData = updateTileData(newGame, tileData)
-		newGame = false
-	} else {
-		tileData = updateTileData(newGame, tileData)
-	}
-	positionClicked()
-	calcTileClicked()
 	current := 16
 	maxSize := 144
 	i := 0
@@ -29,7 +32,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		for y := current; y <= maxSize; y += current {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
-			screen.DrawImage(tileImages[tileData.tiles[i].tileImage], op)
+			screen.DrawImage(tileImages[g.tileData.tiles[i].tileImage], op)
 			i += 1
 		}
 	}
@@ -43,7 +46,7 @@ func main() {
 	createTileImages(sprites)
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Minesweeper")
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	if err := ebiten.RunGame(&Game{newGame: true}); err != nil {
 		log.Fatal(err)
 	}
 }
