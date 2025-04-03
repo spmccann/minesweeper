@@ -27,7 +27,7 @@ func (g *Game) Update() error {
 		g.newGame = false
 	}
 	g.input.clickRelease(g.grid, ebiten.MouseButtonLeft)
-	g.input.clickRelease(g.grid, ebiten.MouseButtonRight)
+	//g.input.clickRelease(g.grid, ebiten.MouseButtonRight)
 	g.grid.checkGrid(g.input)
 	return nil
 }

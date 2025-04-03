@@ -20,3 +20,12 @@
 ## Sound
 - win/lose noise
 - click tile noise
+
+
+## Sprite sheet key
+0: one
+1: two
+2: covered
+3: 5
+4: flag
+5: uncovered
