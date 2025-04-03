@@ -1,5 +1,7 @@
 package main
 
+import "github.com/hajimehoshi/ebiten/v2"
+
 type tile struct {
 	x             int
 	y             int
@@ -37,7 +39,7 @@ func newGrid() grid {
 		tiles:    []tile{},
 		offset:   16,
 		tileSize: 16,
-		gridSize: 160,
+		gridSize: 144,
 	}
 }
 
@@ -51,11 +53,16 @@ func (gr *grid) populateGrid() {
 	}
 }
 
-func (gr *grid) checkGrid(tileClick [2]int) grid {
+func (gr *grid) checkGrid(in input) grid {
 	for t := range gr.tiles {
-		if gr.tiles[t].x == tileClick[0] && gr.tiles[t].y == tileClick[1] {
+		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			gr.tiles[t].isUncovered = true
-			gr.tiles[t].tileImage = 1
+			if in.button == ebiten.MouseButtonLeft {
+				gr.tiles[t].tileImage = 1
+			}
+			if in.button == ebiten.MouseButtonRight {
+				gr.tiles[t].tileImage = 2
+			}
 		}
 	}
 	return *gr

@@ -26,8 +26,9 @@ func (g *Game) Update() error {
 
 		g.newGame = false
 	}
-	g.input.clickRelease(g.grid)
-	g.grid.checkGrid(g.input.tileClick)
+	g.input.clickRelease(g.grid, ebiten.MouseButtonLeft)
+	g.input.clickRelease(g.grid, ebiten.MouseButtonRight)
+	g.grid.checkGrid(g.input)
 	return nil
 }
 
@@ -46,7 +47,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 192, 192
+	return 176, 176
 }
 
 func main() {
