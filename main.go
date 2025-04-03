@@ -7,48 +7,46 @@ import (
 )
 
 type Game struct {
-	newGame   bool
-	tileData  grid
-	mouseData input
-	graphics  graphic
+	newGame bool
+	grid    grid
+	input   input
+	graphic graphic
 }
 
 func (g *Game) Update() error {
 	if g.newGame {
-		g.mouseData = newInput()
+		g.input = newInput()
 
-		g.tileData = newGrid()
+		g.grid = newGrid()
 
-		g.tileData.populateGrid()
+		g.grid.populateGrid()
 
-		g.graphics.init()
-		g.graphics.createTileImages()
+		g.graphic.init()
+		g.graphic.createTileImages()
 
 		g.newGame = false
 	}
-	g.mouseData.clickRelease()
-	g.tileData.checkGrid(g.mouseData.tileClick)
+	g.input.clickRelease(g.grid)
+	g.grid.checkGrid(g.input.tileClick)
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	current := 16
-	maxSize := 144
 	i := 0
-	for x := current; x <= maxSize; x += current {
-		for y := current; y <= maxSize; y += current {
+	for x := g.grid.offset; x <= g.grid.gridSize; x += g.grid.tileSize {
+		for y := g.grid.offset; y <= g.grid.gridSize; y += g.grid.tileSize {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
-			imgNum := g.tileData.tiles[i].tileImage
+			imgNum := g.grid.tiles[i].tileImage
 
-			screen.DrawImage(g.graphics.tileImages[imgNum], op)
+			screen.DrawImage(g.graphic.tileImages[imgNum], op)
 			i += 1
 		}
 	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 176, 176
+	return 192, 192
 }
 
 func main() {
