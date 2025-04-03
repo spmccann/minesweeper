@@ -56,9 +56,9 @@ func (gr *grid) populateGrid() {
 func (gr *grid) checkGrid(in input) grid {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
-			gr.tiles[t].isUncovered = true
 			if in.button == ebiten.MouseButtonLeft {
 				gr.tiles[t].tileImage = 1
+				gr.tiles[t].isUncovered = true
 			}
 			if in.button == ebiten.MouseButtonRight {
 				gr.tiles[t].tileImage = 2

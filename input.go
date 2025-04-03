@@ -28,11 +28,11 @@ func (i *input) tileClicked() {
 	i.tileClick[1] = (mousePosY - i.grid.offset) / i.grid.tileSize
 }
 
-func (i *input) clickPress(button ebiten.MouseButton) {
+func (i *input) registerPress(button ebiten.MouseButton) {
 	mousePosX, mousePosY := ebiten.CursorPosition()
-	mousePresssed := ebiten.IsMouseButtonPressed(button)
+	mousePressed := ebiten.IsMouseButtonPressed(button)
 	outBounds := mousePosX < i.grid.offset || mousePosY < i.grid.offset
-	if mousePresssed && !i.mousePreviouslyPressed && !outBounds {
+	if mousePressed && !i.mousePreviouslyPressed && !outBounds {
 		i.tileWhenPressed = [2]int{(mousePosX - i.grid.offset) / i.grid.tileSize, (mousePosY - i.grid.offset) / i.grid.tileSize}
 	}
 }
@@ -46,15 +46,24 @@ func (i *input) comparePosition() bool {
 	return false
 }
 
-func (i *input) clickRelease(grid grid, button ebiten.MouseButton) {
+func (i *input) mouseEvents(grid grid) {
+	var mousePressed bool
 	i.grid = grid
-	mousePresssed := ebiten.IsMouseButtonPressed(button)
-	i.clickPress(button)
-	if !mousePresssed && i.mousePreviouslyPressed && i.comparePosition() {
-		i.tileClicked()
-		i.button = button
+	leftPressed := ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	rightPressed := ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight)
+	if leftPressed {
+		mousePressed = leftPressed
+		i.button = ebiten.MouseButtonLeft
 	}
-	i.mousePreviouslyPressed = mousePresssed
+	if rightPressed {
+		mousePressed = rightPressed
+		i.button = ebiten.MouseButtonRight
+	}
+	i.registerPress(i.button)
+	if !mousePressed && i.mousePreviouslyPressed && i.comparePosition() {
+		i.tileClicked()
+	}
+	i.mousePreviouslyPressed = mousePressed
 }
 
 func (i *input) debugCursor() {
