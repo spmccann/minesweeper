@@ -11,7 +11,8 @@ type input struct {
 	mousePreviouslyPressed bool
 	tileWhenPressed        [2]int
 	grid                   grid
-	button                 ebiten.MouseButton
+	mouseButtonLeft        bool
+	mouseButtonRight       bool
 }
 
 func newInput() input {
@@ -28,9 +29,14 @@ func (i *input) tileClicked() {
 	i.tileClick[1] = (mousePosY - i.grid.offset) / i.grid.tileSize
 }
 
-func (i *input) registerPress(button ebiten.MouseButton) {
+func (i *input) registerPress(button bool) {
+	var mousePressed bool
 	mousePosX, mousePosY := ebiten.CursorPosition()
-	mousePressed := ebiten.IsMouseButtonPressed(button)
+	if button {
+		mousePressed = ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft)
+	} else {
+		mousePressed = ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight)
+	}
 	outBounds := mousePosX < i.grid.offset || mousePosY < i.grid.offset
 	if mousePressed && !i.mousePreviouslyPressed && !outBounds {
 		i.tileWhenPressed = [2]int{(mousePosX - i.grid.offset) / i.grid.tileSize, (mousePosY - i.grid.offset) / i.grid.tileSize}
@@ -53,13 +59,14 @@ func (i *input) mouseEvents(grid grid) {
 	rightPressed := ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight)
 	if leftPressed {
 		mousePressed = leftPressed
-		i.button = ebiten.MouseButtonLeft
+		i.mouseButtonLeft = true
 	}
 	if rightPressed {
 		mousePressed = rightPressed
-		i.button = ebiten.MouseButtonRight
+		i.mouseButtonRight = true
 	}
-	i.registerPress(i.button)
+	i.registerPress(i.mouseButtonLeft)
+	i.registerPress(i.mouseButtonRight)
 	if !mousePressed && i.mousePreviouslyPressed && i.comparePosition() {
 		i.tileClicked()
 	}
