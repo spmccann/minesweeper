@@ -55,11 +55,11 @@ func (gr *grid) checkGrid(in input) grid {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
-				gr.tiles[t].tileImage = 1
+				gr.tiles[t].tileImage = 2
 				gr.tiles[t].isUncovered = true
 			}
 			if in.mouseButtonRight {
-				gr.tiles[t].tileImage = 3
+				gr.tiles[t].tileImage = 1
 			}
 		}
 	}
