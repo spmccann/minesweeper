@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	_ "image/png"
 	"log"
@@ -26,13 +25,11 @@ func (gs *graphic) init() {
 func (gs *graphic) createTileImages() {
 	imgWidth := gs.sprites.Bounds().Dx()
 	tileSize := 16
-	padding := 0
+	padding := 1
 	stride := tileSize + padding
-	fmt.Println(imgWidth)
-	for x := 0; x < imgWidth; x += 16 {
-		part := gs.sprites.SubImage(image.Rect(x, 0, x+stride, 16))
+	for x := 0; x < imgWidth; x += stride {
+		part := gs.sprites.SubImage(image.Rect(x, 0, x+tileSize, tileSize))
 		newTile := ebiten.NewImageFromImage(part)
 		gs.tileImages = append(gs.tileImages, newTile)
-		padding = 1
 	}
 }
