@@ -24,7 +24,7 @@ func newTile() tile {
 		isMine:        false,
 		isUncovered:   false,
 		isFlagged:     false,
-		neighborMines: -1,
+		neighborMines: 4,
 		tileImage:     0,
 	}
 }
@@ -62,13 +62,7 @@ func (gr *grid) checkGrid(in input) grid {
 				gr.identifyTile(t)
 			}
 			if in.mouseButtonRight {
-				if gr.tiles[t].tileImage == 1 {
-					gr.tiles[t].tileImage = 0
-				} else if gr.tiles[t].tileImage == 0 {
-					gr.tiles[t].tileImage = 1
-				} else {
-					return *gr
-				}
+				gr.flag(t)
 			}
 		}
 	}
@@ -80,7 +74,17 @@ func (gr *grid) identifyTile(t int) {
 		fmt.Println("clicked on mine")
 	}
 	if !gr.tiles[t].isUncovered {
-		gr.tiles[t].tileImage = 5
+		gr.tiles[t].tileImage = gr.tiles[t].neighborMines
 		gr.tiles[t].isUncovered = true
+	}
+}
+
+func (gr *grid) flag(t int) {
+	if gr.tiles[t].tileImage == 9 {
+		gr.tiles[t].tileImage = 0
+	} else if gr.tiles[t].tileImage == 0 {
+		gr.tiles[t].tileImage = 9
+	} else {
+		return
 	}
 }

@@ -38,7 +38,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
 			imgNum := g.grid.tiles[i].tileImage
-			screen.DrawImage(g.graphic.tileImages[imgNum], op)
+			screen.DrawImage(g.graphic.sortTileImages[imgNum], op)
 			i += 1
 		}
 	}

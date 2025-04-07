@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	_ "image/png"
 	"log"
@@ -10,8 +11,9 @@ import (
 )
 
 type graphic struct {
-	sprites    *ebiten.Image
-	tileImages []*ebiten.Image
+	sprites        *ebiten.Image
+	tileImages     []*ebiten.Image
+	sortTileImages []*ebiten.Image
 }
 
 func (gs *graphic) init() {
@@ -32,4 +34,23 @@ func (gs *graphic) createTileImages() {
 		newTile := ebiten.NewImageFromImage(part)
 		gs.tileImages = append(gs.tileImages, newTile)
 	}
+	gs.sortImages()
+}
+
+func (gs *graphic) sortImages() {
+	fmt.Println(len(gs.tileImages))
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[0])  // blank
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[9])  // 1
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[12]) // 2
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[13]) // 3
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[6])  // 4
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[3])  // 5
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[10]) // 6
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[11]) // 7
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[5])  // 8
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[1])  // flag
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[2])  //mine
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[7])  //exploded mine
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[4])  // question
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[8])  // alt blank
 }
