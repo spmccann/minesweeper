@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	_ "image/png"
 	"log"
@@ -38,8 +37,7 @@ func (gs *graphic) createTileImages() {
 }
 
 func (gs *graphic) sortImages() {
-	fmt.Println(len(gs.tileImages))
-	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[0])  // blank
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[8])  // alt blank
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[9])  // 1
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[12]) // 2
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[13]) // 3
@@ -52,5 +50,5 @@ func (gs *graphic) sortImages() {
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[2])  //mine
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[7])  //exploded mine
 	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[4])  // question
-	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[8])  // alt blank
+	gs.sortTileImages = append(gs.sortTileImages, gs.tileImages[0])  // blank
 }
