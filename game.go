@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type tile struct {
 	x             int
 	y             int
@@ -20,6 +22,8 @@ func newTile() tile {
 		x:             -1,
 		y:             -1,
 		isMine:        false,
+		isUncovered:   false,
+		isFlagged:     false,
 		neighborMines: -1,
 		tileImage:     0,
 	}
@@ -55,13 +59,28 @@ func (gr *grid) checkGrid(in input) grid {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
-				gr.tiles[t].tileImage = 2
-				gr.tiles[t].isUncovered = true
+				gr.identifyTile(t)
 			}
 			if in.mouseButtonRight {
-				gr.tiles[t].tileImage = 1
+				if gr.tiles[t].tileImage == 1 {
+					gr.tiles[t].tileImage = 0
+				} else if gr.tiles[t].tileImage == 0 {
+					gr.tiles[t].tileImage = 1
+				} else {
+					return *gr
+				}
 			}
 		}
 	}
 	return *gr
+}
+
+func (gr *grid) identifyTile(t int) {
+	if gr.tiles[t].isMine {
+		fmt.Println("clicked on mine")
+	}
+	if !gr.tiles[t].isUncovered {
+		gr.tiles[t].tileImage = 5
+		gr.tiles[t].isUncovered = true
+	}
 }
