@@ -129,6 +129,7 @@ func (gr *grid) checkGrid(in input) grid {
 			}
 			if in.mouseButtonRight {
 				gr.flag(t)
+				gr.winCheck()
 			}
 		}
 	}
@@ -193,7 +194,7 @@ func (gr *grid) countFlags() int {
 	return numFlags
 }
 
-func (gr *grid) win() {
+func (gr *grid) winCheck() {
 	correctFlags := 0
 	for t := range gr.tiles {
 		if gr.tiles[t].isFlagged && gr.tiles[t].isMine {
