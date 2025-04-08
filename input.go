@@ -11,6 +11,7 @@ type input struct {
 	mouseRightPreviouslyPressed bool
 	mouseLeftPreviouslyPressed  bool
 	tileWhenPressed             [2]int
+	menuWhenPressed             [2]int
 	grid                        grid
 	mouseButtonLeft             bool
 	mouseButtonRight            bool
@@ -41,6 +42,10 @@ func (i *input) registerPress() {
 	if i.mouseButtonRight && !i.mouseRightPreviouslyPressed && !outBounds {
 		i.tileWhenPressed = [2]int{(mousePosX - i.grid.offset) / i.grid.tileSize, (mousePosY - i.grid.offset) / i.grid.tileSize}
 		i.mouseButtonRight = false
+	}
+	if i.mouseButtonLeft && !i.mouseLeftPreviouslyPressed && outBounds {
+		i.menuWhenPressed = [2]int{mousePosX, mousePosY}
+		i.mouseButtonLeft = false
 	}
 }
 

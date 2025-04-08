@@ -32,6 +32,17 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	g.displayMenu(screen)
+	g.displayGrid(screen)
+}
+
+func (g *Game) displayMenu(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(0), float64(0))
+	screen.DrawImage(g.graphic.sortTileImages[1], op)
+}
+
+func (g *Game) displayGrid(screen *ebiten.Image) {
 	i := 0
 	for x := g.grid.offset; x <= g.grid.gridSize; x += g.grid.tileSize {
 		for y := g.grid.offset; y <= g.grid.gridSize; y += g.grid.tileSize {
@@ -45,7 +56,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 352, 352
+	return 416, 416
 }
 
 func main() {

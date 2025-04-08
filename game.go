@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand/v2"
 )
 
@@ -41,14 +42,16 @@ type grid struct {
 	offset   int
 	tileSize int
 	gridSize int
+	flags    int
 }
 
 func newGrid() grid {
 	return grid{
 		tiles:    []tile{},
-		offset:   32,
+		offset:   64,
 		tileSize: 32,
-		gridSize: 288,
+		gridSize: 320,
+		flags:    10,
 	}
 }
 
@@ -62,12 +65,10 @@ func (gr *grid) populateGrid() {
 			gr.tiles = append(gr.tiles, t)
 		}
 	}
-	gr.generateMines()
-	gr.neighborNumbers()
 }
 
-func (gr *grid) generateMines() {
-	mineLocations := randomNumbers(80, 10)
+func (gr *grid) generateMines(tileException int) {
+	mineLocations := randomNumbers(80, gr.flags, tileException)
 	for t := range gr.tiles {
 		for i := range mineLocations {
 			if gr.tiles[t].id == mineLocations[i] {
@@ -96,11 +97,14 @@ func (gr *grid) neighborNumbers() {
 		mineCounter = 0
 	}
 }
-func randomNumbers(maxNum, count int) []int {
+
+func randomNumbers(maxNum, count, exclusion int) []int {
 	selections := make([]int, 0, count)
 	numberPool := make([]int, maxNum)
 	for i := range numberPool {
-		numberPool[i] = i
+		if i != exclusion {
+			numberPool[i] = i
+		}
 	}
 	for i := 0; i < count; i++ {
 		idx := rand.IntN(len(numberPool))
@@ -117,6 +121,10 @@ func (gr *grid) checkGrid(in input) grid {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
+				if !gr.tileClicked() {
+					gr.generateMines(t)
+					gr.neighborNumbers()
+				}
 				gr.identifyTileClicked(t)
 			}
 			if in.mouseButtonRight {
@@ -127,10 +135,20 @@ func (gr *grid) checkGrid(in input) grid {
 	return *gr
 }
 
+func (gr *grid) tileClicked() bool {
+	for t := range gr.tiles {
+		if gr.tiles[t].isUncovered {
+			return true
+		}
+	}
+	return false
+}
+
 func (gr *grid) identifyTileClicked(t int) {
 	if gr.tiles[t].isMine {
 		gr.revealMines(t)
 		gr.tiles[t].tileImage = 11
+		fmt.Println("You lost")
 	}
 	if !gr.tiles[t].isUncovered && !gr.tiles[t].isMine {
 		gr.tiles[t].tileImage = gr.tiles[t].neighborMines
@@ -156,4 +174,30 @@ func (gr *grid) revealMines(tClick int) {
 			gr.tiles[t].tileImage = 10
 		}
 	}
+}
+
+func (gr *grid) countFlags() int {
+	numFlags := 0
+	for t := range gr.tiles {
+		if gr.tiles[t].isFlagged {
+			numFlags += 1
+		}
+	}
+	return numFlags
+}
+
+func (gr *grid) win() {
+	correctFlags := 0
+	for t := range gr.tiles {
+		if gr.tiles[t].isFlagged && gr.tiles[t].isMine {
+			correctFlags += 1
+		}
+	}
+
+	if correctFlags == gr.flags {
+		fmt.Println("You won")
+	}
+}
+
+func (gr *grid) reset() {
 }

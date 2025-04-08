@@ -1,18 +1,14 @@
 # Todo
 
-## UI Improvements
+## UI/Graphic Improvements
 - New game button
 - Timer
-- Title message
-- Tile Effects/Animations (maybe)
+- Flags left 
 
 ## Game Logic
 - end game
-- flag for right click
+- question for right click
 - Win if all tiles uncovered and mines flagged
-
-## Graphics
-- new game img/btn
 
 ## Sound
 - win/lose noise
