@@ -151,8 +151,15 @@ func (gr *grid) identifyTileClicked(t int) {
 		fmt.Println("You lost")
 	}
 	if !gr.tiles[t].isUncovered && !gr.tiles[t].isMine {
-		gr.tiles[t].tileImage = gr.tiles[t].neighborMines
-		gr.tiles[t].isUncovered = true
+		if gr.tiles[t].neighborMines > 0 {
+			gr.tiles[t].tileImage = gr.tiles[t].neighborMines
+			gr.tiles[t].isUncovered = true
+		} else {
+			gr.tiles[t].tileImage = 0
+			gr.tiles[t].isUncovered = true
+			gr.zeroMines(t)
+
+		}
 	}
 }
 
@@ -199,5 +206,23 @@ func (gr *grid) win() {
 	}
 }
 
-func (gr *grid) reset() {
+func (gr *grid) zeroMines(tile int) {
+	neighborsId := []int{-10, -1, 8, -9, 1, -8, 9, 10}
+	neighborCoord := [][]int{{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 1}, {-1, 1}, {1, 0}, {1, 1}}
+	for i := range neighborsId {
+		nbTile := []int{gr.tiles[tile].x + neighborCoord[i][0], gr.tiles[tile].y + neighborCoord[i][1]}
+		xBounds := nbTile[0] >= 0 && nbTile[0] <= 8
+		yBounds := nbTile[1] >= 0 && nbTile[1] <= 8
+		if xBounds && yBounds {
+			nextTile := gr.tiles[tile+neighborsId[i]]
+			if nextTile.neighborMines == 0 && !nextTile.isUncovered {
+				gr.tiles[nextTile.id].isUncovered = true
+				gr.tiles[nextTile.id].tileImage = 0
+				gr.zeroMines(nextTile.id)
+			} else {
+				gr.tiles[nextTile.id].isUncovered = true
+				gr.tiles[nextTile.id].tileImage = nextTile.neighborMines
+			}
+		}
+	}
 }
