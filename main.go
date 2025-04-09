@@ -1,7 +1,9 @@
 package main
 
 import (
+	"image"
 	"log"
+	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -72,7 +74,22 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return 480, 480
 }
 
+func windowIcon() {
+	f, err := os.Open("assets/new_assets/Flag.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	img, _, err := image.Decode(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	ebiten.SetWindowIcon([]image.Image{img})
+}
+
 func main() {
+	windowIcon()
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Minesweeper")
 	if err := ebiten.RunGame(&Game{newGame: true}); err != nil {

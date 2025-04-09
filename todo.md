@@ -4,10 +4,9 @@
 - New game button
 - Timer
 - Flags left 
+- app logo
 
 ## Game Logic
-- end game
-- Win if all tiles uncovered and mines flagged
 
 ## Sound
 - win/lose noise
