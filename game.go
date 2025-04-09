@@ -44,6 +44,7 @@ type grid struct {
 	tileSize int
 	gridSize int
 	flags    int
+	gameOver bool
 }
 
 func newGrid() grid {
@@ -120,6 +121,9 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 }
 
 func (gr *grid) checkGrid(in input) {
+	if gr.gameOver {
+		return
+	}
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
@@ -150,6 +154,7 @@ func (gr *grid) identifyTileClicked(t int) {
 	if gr.tiles[t].isMine {
 		gr.revealMines(t)
 		gr.tiles[t].tileImage = 11
+		gr.gameOver = true
 		fmt.Println("You lost")
 	}
 	if !gr.tiles[t].isUncovered && !gr.tiles[t].isMine {
@@ -207,6 +212,7 @@ func (gr *grid) winCheck() {
 	}
 
 	if correctFlags == gr.flags {
+		gr.gameOver = true
 		fmt.Println("You won")
 	}
 }
