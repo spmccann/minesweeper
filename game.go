@@ -39,7 +39,8 @@ func newTile() tile {
 
 type grid struct {
 	tiles    []tile
-	offset   int
+	offsetX  int
+	offsetY  int
 	tileSize int
 	gridSize int
 	flags    int
@@ -48,7 +49,8 @@ type grid struct {
 func newGrid() grid {
 	return grid{
 		tiles:    []tile{},
-		offset:   64,
+		offsetX:  64,
+		offsetY:  64,
 		tileSize: 32,
 		gridSize: 320,
 		flags:    10,
@@ -58,10 +60,10 @@ func newGrid() grid {
 func (gr *grid) populateGrid() {
 	t := newTile()
 	id := -1
-	for x := gr.offset; x <= gr.gridSize; x += gr.tileSize {
-		for y := gr.offset; y <= gr.gridSize; y += gr.tileSize {
+	for x := gr.offsetX; x <= gr.gridSize; x += gr.tileSize {
+		for y := gr.offsetY; y <= gr.gridSize; y += gr.tileSize {
 			id += 1
-			t.updateTile((x-gr.offset)/gr.tileSize, (y-gr.offset)/gr.tileSize, id)
+			t.updateTile((x-gr.offsetX)/gr.tileSize, (y-gr.offsetY)/gr.tileSize, id)
 			gr.tiles = append(gr.tiles, t)
 		}
 	}
@@ -174,7 +176,7 @@ func (gr *grid) flag(t int) {
 	} else if gr.tiles[t].tileImage == 13 {
 		gr.tiles[t].tileImage = 9
 		gr.tiles[t].isFlagged = true
-	} else {
+
 		return
 	}
 }

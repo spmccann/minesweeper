@@ -7,7 +7,6 @@
 
 ## Game Logic
 - end game
-- question for right click
 - Win if all tiles uncovered and mines flagged
 
 ## Sound

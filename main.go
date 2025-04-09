@@ -11,6 +11,7 @@ type Game struct {
 	grid    grid
 	input   input
 	graphic graphic
+	menu    menu
 }
 
 func (g *Game) Update() error {
@@ -18,16 +19,20 @@ func (g *Game) Update() error {
 		g.input = newInput()
 
 		g.grid = newGrid()
-
 		g.grid.populateGrid()
+
+		g.menu = newMenu()
+		g.menu.populateMenu()
 
 		g.graphic.init()
 		g.graphic.createTileImages()
+		g.graphic.createMenuImages()
 
 		g.newGame = false
 	}
-	g.input.mouseEvents(g.grid)
+	g.input.mouseEvents(g.grid, g.menu)
 	g.grid.checkGrid(g.input)
+	g.menu.checkMenu(g.input)
 	return nil
 }
 
@@ -37,15 +42,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) displayMenu(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(0), float64(0))
-	screen.DrawImage(g.graphic.sortTileImages[1], op)
+	i := 0
+	for x := g.menu.offsetX; x <= g.menu.menuWidth; x += g.menu.itemWidth {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(float64(x), float64(0))
+		imgNum := g.menu.items[i].itemImage
+		screen.DrawImage(g.graphic.sortTileImages[imgNum], op)
+		i += 1
+	}
 }
 
 func (g *Game) displayGrid(screen *ebiten.Image) {
 	i := 0
-	for x := g.grid.offset; x <= g.grid.gridSize; x += g.grid.tileSize {
-		for y := g.grid.offset; y <= g.grid.gridSize; y += g.grid.tileSize {
+	for x := g.grid.offsetX; x <= g.grid.gridSize; x += g.grid.tileSize {
+		for y := g.grid.offsetY; y <= g.grid.gridSize; y += g.grid.tileSize {
 			op := &ebiten.DrawImageOptions{}
 			op.GeoM.Translate(float64(x), float64(y))
 			imgNum := g.grid.tiles[i].tileImage
@@ -56,7 +66,7 @@ func (g *Game) displayGrid(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 416, 416
+	return 480, 480
 }
 
 func main() {
