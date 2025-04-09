@@ -64,7 +64,6 @@ func (m *menu) populateMenu() {
 
 func (m *menu) checkMenu(in input) {
 	for i := range m.items {
-		fmt.Println(m.items[i].x, m.items[i].y, in.menuClick)
 		if m.items[i].x == in.menuClick[0] && m.items[i].y == in.menuClick[1] {
 			if in.mouseButtonLeft {
 				fmt.Println("menu item clicked")

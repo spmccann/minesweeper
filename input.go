@@ -57,18 +57,23 @@ func (i *input) registerPress() {
 	}
 }
 
-func (i *input) comparePosition() bool {
+func (i *input) comparePositionTile() bool {
 	mousePosX, mousePosY := ebiten.CursorPosition()
-	currentPos := [2]int{(mousePosX - i.grid.offsetX) / i.grid.tileSize, (mousePosY - i.grid.offsetY) / i.grid.tileSize}
-	if i.tileWhenPressed == currentPos {
-		return true
-	}
-	if i.menuWhenPressed == currentPos {
+	currentTilePos := [2]int{(mousePosX - i.grid.offsetX) / i.grid.tileSize, (mousePosY - i.grid.offsetY) / i.grid.tileSize}
+	if i.tileWhenPressed == currentTilePos {
 		return true
 	}
 	return false
 }
 
+func (i *input) comparePositionItem() bool {
+	mousePosX, mousePosY := ebiten.CursorPosition()
+	currentItemPos := [2]int{(mousePosX - i.menu.offsetX) / i.menu.itemWidth, (mousePosY - i.menu.offsetY) / i.menu.itemHeight}
+	if i.menuWhenPressed == currentItemPos {
+		return true
+	}
+	return false
+}
 func (i *input) mouseEvents(grid grid, menu menu) {
 	i.tileClick = [2]int{-2, -2}
 	i.menuClick = [2]int{-1, -1}
@@ -84,12 +89,14 @@ func (i *input) mouseEvents(grid grid, menu menu) {
 		i.mouseButtonRight = true
 		i.registerPress()
 	}
-	if !leftPressed && i.mouseLeftPreviouslyPressed && i.comparePosition() {
+	if !leftPressed && i.mouseLeftPreviouslyPressed && i.comparePositionTile() {
 		i.tileClicked()
-		i.menuClicked()
 	}
-	if !rightPressed && i.mouseRightPreviouslyPressed && i.comparePosition() {
+	if !rightPressed && i.mouseRightPreviouslyPressed && i.comparePositionTile() {
 		i.tileClicked()
+	}
+	if !leftPressed && i.mouseLeftPreviouslyPressed && i.comparePositionItem() {
+		i.menuClicked()
 	}
 	i.mouseLeftPreviouslyPressed = leftPressed
 	i.mouseRightPreviouslyPressed = rightPressed
