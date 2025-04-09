@@ -166,6 +166,9 @@ func (gr *grid) identifyTileClicked(t int) {
 
 func (gr *grid) flag(t int) {
 	if gr.tiles[t].tileImage == 9 {
+		gr.tiles[t].tileImage = 12
+		gr.tiles[t].isFlagged = false
+	} else if gr.tiles[t].tileImage == 12 {
 		gr.tiles[t].tileImage = 13
 		gr.tiles[t].isFlagged = false
 	} else if gr.tiles[t].tileImage == 13 {
