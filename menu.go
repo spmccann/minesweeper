@@ -1,13 +1,12 @@
 package main
 
-import "fmt"
-
 type item struct {
 	id        int
+	label     string
 	x         int
 	y         int
 	coord     [2]int
-	onSelect  func()
+	onSelect  bool
 	itemImage int
 }
 
@@ -16,17 +15,16 @@ func (i *item) updateItem(x, y, id int) {
 	i.y = y
 	i.id = id
 	i.coord = [2]int{x, y}
-	i.onSelect = func() {
-		fmt.Println("Restarting...")
-	}
 }
 
 func newItem() item {
 	return item{
 		id:        -1,
+		label:     "",
 		x:         -1,
 		y:         -1,
 		itemImage: 0,
+		onSelect:  false,
 	}
 }
 
@@ -66,8 +64,7 @@ func (m *menu) checkMenu(in input) {
 	for i := range m.items {
 		if m.items[i].x == in.menuClick[0] && m.items[i].y == in.menuClick[1] {
 			if in.mouseButtonLeft {
-				fmt.Println("menu item clicked")
-				m.items[i].onSelect()
+				m.items[i].onSelect = true
 			}
 		}
 	}

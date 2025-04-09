@@ -33,6 +33,9 @@ func (g *Game) Update() error {
 	g.input.mouseEvents(g.grid, g.menu)
 	g.grid.checkGrid(g.input)
 	g.menu.checkMenu(g.input)
+	if g.menu.items[0].onSelect == true {
+		g.newGame = true
+	}
 	return nil
 }
 

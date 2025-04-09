@@ -119,7 +119,7 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 	return selections
 }
 
-func (gr *grid) checkGrid(in input) grid {
+func (gr *grid) checkGrid(in input) {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
@@ -135,7 +135,6 @@ func (gr *grid) checkGrid(in input) grid {
 			}
 		}
 	}
-	return *gr
 }
 
 func (gr *grid) tileClicked() bool {
