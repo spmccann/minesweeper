@@ -153,6 +153,7 @@ func (gr *grid) tileClicked() bool {
 func (gr *grid) identifyTileClicked(t int) {
 	if gr.tiles[t].isMine {
 		gr.revealMines(t)
+		gr.wrongFlags()
 		gr.tiles[t].tileImage = 11
 		gr.gameOver = true
 		fmt.Println("You lost")
@@ -189,6 +190,14 @@ func (gr *grid) revealMines(tClick int) {
 	for t := range gr.tiles {
 		if gr.tiles[t].isMine && t != tClick && !gr.tiles[t].isFlagged {
 			gr.tiles[t].tileImage = 10
+		}
+	}
+}
+
+func (gr *grid) wrongFlags() {
+	for t := range gr.tiles {
+		if gr.tiles[t].isFlagged && !gr.tiles[t].isMine {
+			gr.tiles[t].tileImage = 7
 		}
 	}
 }
