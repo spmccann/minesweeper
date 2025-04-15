@@ -112,8 +112,6 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 		value := numberPool[idx]
 		if value != exclusion {
 			selections = append(selections, value)
-		} else {
-			i -= 1
 		}
 		numberPool[idx] = numberPool[len(numberPool)-1]
 		numberPool = numberPool[:len(numberPool)-1]
@@ -121,13 +119,15 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 	return selections
 }
 
-func (gr *grid) checkGrid(in input) {
+func (gr *grid) checkGrid(in input, s sound) {
 	if gr.gameOver {
 		return
 	}
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
+				s.soundEffects.click.Rewind()
+				s.soundEffects.click.Play()
 				if !gr.tileClicked() {
 					gr.generateMines(t)
 					gr.neighborNumbers()

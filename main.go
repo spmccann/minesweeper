@@ -1,11 +1,10 @@
 package main
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
 	"os"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Game struct {
@@ -14,6 +13,7 @@ type Game struct {
 	input   input
 	graphic graphic
 	menu    menu
+	sound   sound
 }
 
 func (g *Game) Update() error {
@@ -30,10 +30,13 @@ func (g *Game) Update() error {
 		g.graphic.createTileImages()
 		g.graphic.createMenuImages()
 
+		g.sound = newSound()
+		g.sound.init()
+
 		g.newGame = false
 	}
 	g.input.mouseEvents(g.grid, g.menu)
-	g.grid.checkGrid(g.input)
+	g.grid.checkGrid(g.input, g.sound)
 	g.menu.checkMenu(g.input)
 	if g.menu.items[0].onSelect == true {
 		g.newGame = true
