@@ -1,9 +1,10 @@
 # Todo
 
 ## UI/Graphic Improvements
-- New game button
+- Restart button
 - Timer
 - Flags left 
+- window right sizing
 
 ## Game Logic
 - level grid sizes: beginner, intermediate, expert
@@ -13,5 +14,5 @@
 ## Sound
 - win/lose noise
 - click tile noise
-
+- flag noise
 

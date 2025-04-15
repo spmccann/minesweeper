@@ -105,15 +105,16 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 	selections := make([]int, 0, count)
 	numberPool := make([]int, maxNum)
 	for i := range numberPool {
-		if i != exclusion {
-			numberPool[i] = i
-		}
+		numberPool[i] = i
 	}
 	for i := 0; i < count; i++ {
 		idx := rand.IntN(len(numberPool))
 		value := numberPool[idx]
-		selections = append(selections, value)
-
+		if value != exclusion {
+			selections = append(selections, value)
+		} else {
+			i -= 1
+		}
 		numberPool[idx] = numberPool[len(numberPool)-1]
 		numberPool = numberPool[:len(numberPool)-1]
 	}
