@@ -1,15 +1,18 @@
 package main
 
 import (
+	"os"
+	"runtime"
+
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/audio/wav"
-	"os"
 )
 
 type sound struct {
 	sampleRate   int
 	cxt          *audio.Context
 	soundEffects soundEffects
+	enabled      bool
 }
 
 type soundEffects struct {
@@ -20,13 +23,28 @@ type soundEffects struct {
 }
 
 func newSound() sound {
+	enabled := true
+	if runtime.GOOS == "linux" {
+		// Check for WSL environment variables
+		if _, present := os.LookupEnv("WSL_DISTRO_NAME"); present {
+			enabled = false
+			println("Sound disabled: Running under WSL")
+		} else if _, present := os.LookupEnv("WSLENV"); present {
+			enabled = false
+			println("Sound disabled: Running under WSL")
+		}
+	}
 	return sound{
 		sampleRate: 44100,
-		cxt:        audio.NewContext(44100),
+		cxt:        nil,
+		enabled:    enabled,
 	}
 }
 
 func (s *sound) loadWav(path string) (*audio.Player, error) {
+	if !s.enabled || s.cxt == nil {
+		return nil, nil
+	}
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -47,6 +65,10 @@ func (s *sound) loadWav(path string) (*audio.Player, error) {
 }
 
 func (s *sound) init() {
+	if !s.enabled {
+		return
+	}
+	s.cxt = audio.NewContext(s.sampleRate)
 	s.soundEffects.click, _ = s.loadWav("assets/click.wav")
 	//s.soundEffects.win, _ = s.loadWav("assets/win.wav")
 	//s.soundEffects.lose, _ = s.loadWav("assets/lose.wav")

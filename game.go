@@ -126,8 +126,10 @@ func (gr *grid) checkGrid(in input, s sound) {
 	for t := range gr.tiles {
 		if gr.tiles[t].x == in.tileClick[0] && gr.tiles[t].y == in.tileClick[1] {
 			if in.mouseButtonLeft {
-				s.soundEffects.click.Rewind()
-				s.soundEffects.click.Play()
+				if s.enabled && s.soundEffects.click != nil {
+					s.soundEffects.click.Rewind()
+					s.soundEffects.click.Play()
+				}
 				if !gr.tileClicked() {
 					gr.generateMines(t)
 					gr.neighborNumbers()
