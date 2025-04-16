@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"runtime"
 
@@ -51,7 +53,14 @@ func (s *sound) loadWav(path string) (*audio.Player, error) {
 	}
 	defer f.Close()
 
-	d, err := wav.DecodeWithoutResampling(f)
+	data, err := io.ReadAll(f)
+	if err != nil {
+		return nil, err
+	}
+
+	buffer := bytes.NewReader(data)
+
+	d, err := wav.DecodeWithoutResampling(buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +77,10 @@ func (s *sound) init() {
 	if !s.enabled {
 		return
 	}
-	s.cxt = audio.NewContext(s.sampleRate)
+
+	if s.cxt == nil {
+		s.cxt = audio.NewContext(s.sampleRate)
+	}
 	s.soundEffects.click, _ = s.loadWav("assets/click.wav")
 	//s.soundEffects.win, _ = s.loadWav("assets/win.wav")
 	//s.soundEffects.lose, _ = s.loadWav("assets/lose.wav")

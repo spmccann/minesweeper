@@ -33,7 +33,6 @@ func (g *Game) Update() error {
 		g.graphic.createLargeMenuImages()
 		g.graphic.createTileImages()
 
-		g.sound = newSound()
 		g.sound.init()
 
 		g.newGame = false
@@ -107,7 +106,7 @@ func main() {
 	windowIcon()
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Minesweeper")
-	if err := ebiten.RunGame(&Game{newGame: true}); err != nil {
+	if err := ebiten.RunGame(&Game{newGame: true, sound: newSound()}); err != nil {
 		log.Fatal(err)
 	}
 }
