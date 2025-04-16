@@ -10,11 +10,12 @@ type item struct {
 	itemImage int
 }
 
-func (i *item) updateItem(x, y, id int) {
+func (i *item) updateItem(x, y, id, img int) {
 	i.x = x
 	i.y = y
 	i.id = id
 	i.coord = [2]int{x, y}
+	i.itemImage = img
 }
 
 func newItem() item {
@@ -30,6 +31,7 @@ func newItem() item {
 
 type menu struct {
 	items      []item
+	largeItems []item
 	offsetX    int
 	offsetY    int
 	itemWidth  int
@@ -41,7 +43,8 @@ type menu struct {
 func newMenu() menu {
 	return menu{
 		items:      []item{},
-		offsetX:    64,
+		largeItems: []item{},
+		offsetX:    0,
 		offsetY:    0,
 		itemWidth:  32,
 		itemHeight: 32,
@@ -53,11 +56,21 @@ func newMenu() menu {
 func (m *menu) populateMenu() {
 	i := newItem()
 	id := -1
-	for x := m.offsetX; x <= m.menuWidth; x += m.itemWidth {
+	order := []int{12, 5, 4, 4, 11, 4, 4, 4}
+	for x := range order {
 		id += 1
-		i.updateItem((x-m.offsetX)/m.itemWidth, (m.offsetY)/m.itemHeight, id)
+		img := order[x]
+		i.updateItem((x-m.offsetX)/m.itemWidth+2, (m.offsetY)/m.itemHeight, id, img)
 		m.items = append(m.items, i)
 	}
+}
+
+func (m *menu) populateLargeMenu() {
+	i := newItem()
+	id := 0
+	img := 0
+	i.updateItem(0, (m.offsetY)/m.itemHeight, id, img)
+	m.largeItems = append(m.largeItems, i)
 }
 
 func (m *menu) checkMenu(in input) {

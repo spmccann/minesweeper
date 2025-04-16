@@ -10,11 +10,13 @@ import (
 )
 
 type graphic struct {
-	tileSprites    *ebiten.Image
-	menuSprites    *ebiten.Image
-	tileImages     []*ebiten.Image
-	menuImages     []*ebiten.Image
-	sortTileImages []*ebiten.Image
+	tileSprites      *ebiten.Image
+	menuSprites      *ebiten.Image
+	largeMenuSprites *ebiten.Image
+	tileImages       []*ebiten.Image
+	menuImages       []*ebiten.Image
+	menuLargeImages  []*ebiten.Image
+	sortTileImages   []*ebiten.Image
 }
 
 func (gs *graphic) init() {
@@ -23,7 +25,12 @@ func (gs *graphic) init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gs.menuSprites, _, err = ebitenutil.NewImageFromFile("assets/spritesheet.png")
+	gs.menuSprites, _, err = ebitenutil.NewImageFromFile("assets/menusprites.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gs.largeMenuSprites, _, err = ebitenutil.NewImageFromFile("assets/largemenusprites.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +59,19 @@ func (gs *graphic) createMenuImages() {
 		newTile := ebiten.NewImageFromImage(part)
 		gs.menuImages = append(gs.menuImages, newTile)
 	}
-	gs.sortImages()
+}
+
+func (gs *graphic) createLargeMenuImages() {
+	imgWidth := gs.largeMenuSprites.Bounds().Dx()
+	tileWidth := 64
+	tileHeight := 32
+	padding := 1
+	stride := tileWidth + padding
+	for x := 0; x < imgWidth; x += stride {
+		part := gs.largeMenuSprites.SubImage(image.Rect(x, 0, x+tileWidth, tileHeight))
+		newTile := ebiten.NewImageFromImage(part)
+		gs.menuLargeImages = append(gs.menuLargeImages, newTile)
+	}
 }
 
 func (gs *graphic) sortImages() {

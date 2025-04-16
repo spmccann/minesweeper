@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
 	"os"
+
+	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Game struct {
@@ -25,10 +26,12 @@ func (g *Game) Update() error {
 
 		g.menu = newMenu()
 		g.menu.populateMenu()
+		g.menu.populateLargeMenu()
 
 		g.graphic.init()
-		g.graphic.createTileImages()
 		g.graphic.createMenuImages()
+		g.graphic.createLargeMenuImages()
+		g.graphic.createTileImages()
 
 		g.sound = newSound()
 		g.sound.init()
@@ -46,18 +49,27 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.displayMenu(screen)
+	g.displayLargeMenu(screen)
 	g.displayGrid(screen)
 }
 
 func (g *Game) displayMenu(screen *ebiten.Image) {
-	i := 0
-	for x := g.menu.offsetX; x <= g.menu.menuWidth; x += g.menu.itemWidth {
+	x := 32
+	for t := range g.menu.items {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(x), float64(0))
-		imgNum := g.menu.items[i].itemImage
-		screen.DrawImage(g.graphic.sortTileImages[imgNum], op)
-		i += 1
+		imgNum := g.menu.items[t].itemImage
+		screen.DrawImage(g.graphic.menuImages[imgNum], op)
+		x += 32
 	}
+}
+
+func (g *Game) displayLargeMenu(screen *ebiten.Image) {
+	x := 320
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(x), float64(0))
+	imgNum := g.menu.largeItems[0].itemImage
+	screen.DrawImage(g.graphic.menuLargeImages[imgNum], op)
 }
 
 func (g *Game) displayGrid(screen *ebiten.Image) {
