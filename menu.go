@@ -60,7 +60,7 @@ func (m *menu) populateMenu() {
 	for x := range order {
 		id += 1
 		img := order[x]
-		i.updateItem((x-m.offsetX)/m.itemWidth+2, (m.offsetY)/m.itemHeight, id, img)
+		i.updateItem((x-m.offsetX)/m.itemWidth+1, (m.offsetY)/m.itemHeight, id, img)
 		m.items = append(m.items, i)
 	}
 }
