@@ -18,10 +18,10 @@ type sound struct {
 }
 
 type soundEffects struct {
-	click   *audio.Player
-	win     *audio.Player
-	lose    *audio.Player
-	newGame *audio.Player
+	click *audio.Player
+	win   *audio.Player
+	lose  *audio.Player
+	flag  *audio.Player
 }
 
 func newSound() sound {
@@ -81,8 +81,8 @@ func (s *sound) init() {
 	if s.cxt == nil {
 		s.cxt = audio.NewContext(s.sampleRate)
 	}
-	s.soundEffects.click, _ = s.loadWav("assets/click.wav")
-	//s.soundEffects.win, _ = s.loadWav("assets/win.wav")
-	//s.soundEffects.lose, _ = s.loadWav("assets/lose.wav")
-	//s.soundEffects.newGame, _ = s.loadWav("assets/newGame.wav")
+	s.soundEffects.click, _ = s.loadWav("assets/click2.wav")
+	s.soundEffects.win, _ = s.loadWav("assets/win.wav")
+	s.soundEffects.lose, _ = s.loadWav("assets/explosion.wav")
+	s.soundEffects.flag, _ = s.loadWav("assets/flag.wav")
 }

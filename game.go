@@ -137,8 +137,12 @@ func (gr *grid) checkGrid(in input, s sound) {
 				gr.identifyTileClicked(t)
 			}
 			if in.mouseButtonRight {
+				if s.enabled && s.soundEffects.flag != nil {
+					s.soundEffects.flag.Rewind()
+					s.soundEffects.flag.Play()
+				}
 				gr.flag(t)
-				gr.winCheck()
+				gr.winCheck(s)
 			}
 		}
 	}
@@ -215,7 +219,7 @@ func (gr *grid) countFlags() int {
 	return numFlags
 }
 
-func (gr *grid) winCheck() {
+func (gr *grid) winCheck(s sound) {
 	correctFlags := 0
 	for t := range gr.tiles {
 		if gr.tiles[t].isFlagged && gr.tiles[t].isMine {
@@ -225,6 +229,10 @@ func (gr *grid) winCheck() {
 
 	if correctFlags == gr.flags {
 		gr.gameOver = true
+		if s.enabled && s.soundEffects.win != nil {
+			s.soundEffects.win.Rewind()
+			s.soundEffects.win.Play()
+		}
 		fmt.Println("You won")
 	}
 }
