@@ -25,7 +25,6 @@ func (g *Game) Update() error {
 
 		g.menu = newMenu()
 		g.menu.populateMenu()
-		g.menu.populateLargeMenu()
 
 		g.graphic.init()
 		g.graphic.createMenuImages()
@@ -41,6 +40,12 @@ func (g *Game) Update() error {
 	g.menu.checkMenu(g.input)
 	g.menu.flagCounter(g.grid.flagsLeft)
 	g.menu.timerDisplay(g.grid.gameTime)
+	if g.grid.win {
+		g.menu.populateLargeMenu(0)
+	}
+	if g.grid.lost {
+		g.menu.populateLargeMenu(1)
+	}
 	if g.menu.items[0].onSelect == true {
 		g.newGame = true
 	}
@@ -68,8 +73,11 @@ func (g *Game) displayLargeMenu(screen *ebiten.Image) {
 	x := 320
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(x), float64(0))
-	imgNum := g.menu.largeItems[0].itemImage
-	screen.DrawImage(g.graphic.menuLargeImages[imgNum], op)
+	var imgNum int
+	if len(g.menu.largeItems) > 0 {
+		imgNum = g.menu.largeItems[0].itemImage
+		screen.DrawImage(g.graphic.menuLargeImages[imgNum], op)
+	}
 }
 
 func (g *Game) displayGrid(screen *ebiten.Image) {

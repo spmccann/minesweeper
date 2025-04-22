@@ -48,6 +48,8 @@ type grid struct {
 	gameOver  bool
 	gameTime  int
 	ticker    *time.Ticker
+	win       bool
+	lost      bool
 }
 
 func newGrid() grid {
@@ -170,6 +172,7 @@ func (gr *grid) identifyTileClicked(t int) {
 		gr.revealMines(t)
 		gr.wrongFlags()
 		gr.tiles[t].tileImage = 11
+		gr.lost = true
 		gr.gameOver = true
 	}
 	if !gr.tiles[t].isUncovered && !gr.tiles[t].isMine {
@@ -237,6 +240,7 @@ func (gr *grid) winCheck(s sound) {
 	}
 
 	if correctFlags == gr.flags {
+		gr.win = true
 		gr.gameOver = true
 		if s.enabled && s.soundEffects.win != nil {
 			s.soundEffects.win.Rewind()

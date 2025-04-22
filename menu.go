@@ -70,10 +70,10 @@ func (m *menu) populateMenu() {
 	}
 }
 
-func (m *menu) populateLargeMenu() {
+func (m *menu) populateLargeMenu(n int) {
 	i := newItem()
 	id := 0
-	img := 0
+	img := n
 	i.updateItem(0, (m.offsetY)/m.itemHeight, id, img)
 	m.largeItems = append(m.largeItems, i)
 }
