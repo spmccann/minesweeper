@@ -82,3 +82,22 @@ func (m *menu) checkMenu(in input) {
 		}
 	}
 }
+
+func (m *menu) flagCounter(flagCount int) {
+	tiles := numberToTiles(flagCount)
+	m.items[2].itemImage = tiles[0]
+	m.items[3].itemImage = tiles[1]
+}
+
+func numberToTiles(count int) [2]int {
+	key := map[int]int{0: 4, 1: 3, 2: 6, 3: 0, 4: 1, 5: 9, 6: 7, 7: 2, 8: 8, 9: 10}
+	var tiles [2]int
+	if count < 10 {
+		tiles[0] = 4
+		tiles[1] = key[count]
+	} else {
+		tiles[0] = 3
+		tiles[1] = 4
+	}
+	return tiles
+}

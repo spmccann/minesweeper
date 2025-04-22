@@ -38,23 +38,25 @@ func newTile() tile {
 }
 
 type grid struct {
-	tiles    []tile
-	offsetX  int
-	offsetY  int
-	tileSize int
-	gridSize int
-	flags    int
-	gameOver bool
+	tiles     []tile
+	offsetX   int
+	offsetY   int
+	tileSize  int
+	gridSize  int
+	flags     int
+	flagsLeft int
+	gameOver  bool
 }
 
 func newGrid() grid {
 	return grid{
-		tiles:    []tile{},
-		offsetX:  64,
-		offsetY:  64,
-		tileSize: 32,
-		gridSize: 320,
-		flags:    10,
+		tiles:     []tile{},
+		offsetX:   64,
+		offsetY:   64,
+		tileSize:  32,
+		gridSize:  320,
+		flags:     10,
+		flagsLeft: 10,
 	}
 }
 
@@ -182,12 +184,14 @@ func (gr *grid) flag(t int) {
 	if gr.tiles[t].tileImage == 9 {
 		gr.tiles[t].tileImage = 12
 		gr.tiles[t].isFlagged = false
+		gr.flagsLeft += 1
 	} else if gr.tiles[t].tileImage == 12 {
 		gr.tiles[t].tileImage = 13
 		gr.tiles[t].isFlagged = false
 	} else if gr.tiles[t].tileImage == 13 {
 		gr.tiles[t].tileImage = 9
 		gr.tiles[t].isFlagged = true
+		gr.flagsLeft -= 1
 
 		return
 	}
