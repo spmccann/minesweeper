@@ -1,11 +1,10 @@
 package main
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
 	"os"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Game struct {
@@ -41,6 +40,7 @@ func (g *Game) Update() error {
 	g.grid.checkGrid(g.input, g.sound)
 	g.menu.checkMenu(g.input)
 	g.menu.flagCounter(g.grid.flagsLeft)
+	g.menu.timerDisplay(g.grid.gameTime)
 	if g.menu.items[0].onSelect == true {
 		g.newGame = true
 	}

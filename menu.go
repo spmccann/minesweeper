@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+)
+
 type item struct {
 	id        int
 	label     string
@@ -100,4 +105,41 @@ func numberToTiles(count int) [2]int {
 		tiles[1] = 4
 	}
 	return tiles
+}
+
+func (m *menu) timerDisplay(gameTime int) {
+	tiles := timeToTile(gameTime)
+	m.items[5].itemImage = tiles[0]
+	m.items[6].itemImage = tiles[1]
+	m.items[7].itemImage = tiles[2]
+}
+
+func timeToTile(time int) [3]int {
+	key := map[int]int{0: 4, 1: 3, 2: 6, 3: 0, 4: 1, 5: 9, 6: 7, 7: 2, 8: 8, 9: 10}
+	var tiles [3]int
+	digits := intToDigitSlice(time)
+	if len(digits) > 3 {
+		tiles = [3]int{4, 4, 4}
+	} else if len(digits) == 3 {
+		tiles = [3]int{key[digits[0]], key[digits[1]], key[digits[2]]}
+	} else if len(digits) == 2 {
+		tiles = [3]int{4, key[digits[0]], key[digits[1]]}
+	} else {
+		tiles = [3]int{4, 4, key[time]}
+	}
+	return tiles
+}
+
+func intToDigitSlice(n int) []int {
+	s := strconv.Itoa(n)
+	digits := make([]int, len(s))
+	for i, r := range s {
+		digit, err := strconv.Atoi(string(r))
+		if err != nil {
+			fmt.Println("Error converting  rune to int:", err)
+			return nil
+		}
+		digits[i] = digit
+	}
+	return digits
 }

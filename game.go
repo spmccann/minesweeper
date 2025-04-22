@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand/v2"
+	"time"
 )
 
 type tile struct {
@@ -46,6 +47,8 @@ type grid struct {
 	flags     int
 	flagsLeft int
 	gameOver  bool
+	gameTime  int
+	ticker    *time.Ticker
 }
 
 func newGrid() grid {
@@ -57,6 +60,8 @@ func newGrid() grid {
 		gridSize:  320,
 		flags:     10,
 		flagsLeft: 10,
+		gameTime:  0,
+		ticker:    time.NewTicker(1 * time.Second),
 	}
 }
 
@@ -123,6 +128,7 @@ func randomNumbers(maxNum, count, exclusion int) []int {
 
 func (gr *grid) checkGrid(in input, s sound) {
 	if gr.gameOver {
+		gr.ticker.Stop()
 		return
 	}
 	for t := range gr.tiles {
@@ -133,6 +139,7 @@ func (gr *grid) checkGrid(in input, s sound) {
 					s.soundEffects.click.Play()
 				}
 				if !gr.tileClicked() {
+					gr.timer()
 					gr.generateMines(t)
 					gr.neighborNumbers()
 				}
@@ -165,7 +172,6 @@ func (gr *grid) identifyTileClicked(t int) {
 		gr.wrongFlags()
 		gr.tiles[t].tileImage = 11
 		gr.gameOver = true
-		fmt.Println("You lost")
 	}
 	if !gr.tiles[t].isUncovered && !gr.tiles[t].isMine {
 		if gr.tiles[t].neighborMines > 0 {
@@ -237,7 +243,6 @@ func (gr *grid) winCheck(s sound) {
 			s.soundEffects.win.Rewind()
 			s.soundEffects.win.Play()
 		}
-		fmt.Println("You won")
 	}
 }
 
@@ -260,4 +265,18 @@ func (gr *grid) zeroMines(tile int) {
 			}
 		}
 	}
+}
+
+func (gr *grid) timer() {
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case <-gr.ticker.C:
+				gr.gameTime += 1
+			}
+		}
+	}()
 }
