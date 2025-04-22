@@ -59,7 +59,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) displayMenu(screen *ebiten.Image) {
-	x := 32
+	x := 64
 	for t := range g.menu.items {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(x), float64(0))
