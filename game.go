@@ -144,7 +144,7 @@ func (gr *grid) checkGrid(in input, s sound) {
 					gr.generateMines(t)
 					gr.neighborNumbers()
 				}
-				gr.identifyTileClicked(t)
+				gr.identifyTileClicked(t, s)
 			}
 			if in.mouseButtonRight {
 				if s.enabled && s.soundEffects.flag != nil {
@@ -167,10 +167,14 @@ func (gr *grid) tileClicked() bool {
 	return false
 }
 
-func (gr *grid) identifyTileClicked(t int) {
+func (gr *grid) identifyTileClicked(t int, s sound) {
 	if gr.tiles[t].isMine {
 		gr.revealMines(t)
 		gr.wrongFlags()
+		if s.enabled && s.soundEffects.lose != nil {
+			s.soundEffects.lose.Rewind()
+			s.soundEffects.lose.Play()
+		}
 		gr.tiles[t].tileImage = 11
 		gr.lost = true
 		gr.gameOver = true
