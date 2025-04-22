@@ -188,7 +188,7 @@ func (gr *grid) flag(t int) {
 	} else if gr.tiles[t].tileImage == 12 {
 		gr.tiles[t].tileImage = 13
 		gr.tiles[t].isFlagged = false
-	} else if gr.tiles[t].tileImage == 13 {
+	} else if gr.tiles[t].tileImage == 13 && gr.flagsLeft != 0 {
 		gr.tiles[t].tileImage = 9
 		gr.tiles[t].isFlagged = true
 		gr.flagsLeft -= 1
