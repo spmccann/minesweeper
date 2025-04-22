@@ -2,13 +2,16 @@ package main
 
 import (
 	"bytes"
+	"embed"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/audio/wav"
 	"io"
 	"os"
 	"runtime"
-
-	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/wav"
 )
+
+//go:embed assets/*.wav
+var soundAssets embed.FS
 
 type sound struct {
 	sampleRate   int
@@ -47,7 +50,7 @@ func (s *sound) loadWav(path string) (*audio.Player, error) {
 	if !s.enabled || s.cxt == nil {
 		return nil, nil
 	}
-	f, err := os.Open(path)
+	f, err := soundAssets.Open("assets/" + path)
 	if err != nil {
 		return nil, err
 	}
@@ -81,8 +84,8 @@ func (s *sound) init() {
 	if s.cxt == nil {
 		s.cxt = audio.NewContext(s.sampleRate)
 	}
-	s.soundEffects.click, _ = s.loadWav("assets/click2.wav")
-	s.soundEffects.win, _ = s.loadWav("assets/win.wav")
-	s.soundEffects.lose, _ = s.loadWav("assets/explosion.wav")
-	s.soundEffects.flag, _ = s.loadWav("assets/flag.wav")
+	s.soundEffects.click, _ = s.loadWav("click2.wav")
+	s.soundEffects.win, _ = s.loadWav("win.wav")
+	s.soundEffects.lose, _ = s.loadWav("explosion.wav")
+	s.soundEffects.flag, _ = s.loadWav("flag.wav")
 }

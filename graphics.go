@@ -1,13 +1,22 @@
 package main
 
 import (
+	"embed"
 	"image"
 	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
+
+//go:embed assets/spritesheet.png
+var tileSpritesFS embed.FS
+
+//go:embed assets/menusprites.png
+var menuSpritesFS embed.FS
+
+//go:embed assets/largemenusprites.png
+var largeMenuSpritesFS embed.FS
 
 type graphic struct {
 	tileSprites      *ebiten.Image
@@ -21,19 +30,39 @@ type graphic struct {
 
 func (gs *graphic) init() {
 	var err error
-	gs.tileSprites, _, err = ebitenutil.NewImageFromFile("assets/spritesheet.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	gs.menuSprites, _, err = ebitenutil.NewImageFromFile("assets/menusprites.png")
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	gs.largeMenuSprites, _, err = ebitenutil.NewImageFromFile("assets/largemenusprites.png")
+	tileSpritesFile, err := tileSpritesFS.Open("assets/spritesheet.png")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer tileSpritesFile.Close()
+	imgTileSprites, _, err := image.Decode(tileSpritesFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	gs.tileSprites = ebiten.NewImageFromImage(imgTileSprites)
+
+	menuSpritesFile, err := menuSpritesFS.Open("assets/menusprites.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer menuSpritesFile.Close()
+	imgMenuSprites, _, err := image.Decode(menuSpritesFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	gs.menuSprites = ebiten.NewImageFromImage(imgMenuSprites)
+
+	largeMenuSpritesFile, err := largeMenuSpritesFS.Open("assets/largemenusprites.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer largeMenuSpritesFile.Close()
+	imgLargeMenuSprites, _, err := image.Decode(largeMenuSpritesFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	gs.largeMenuSprites = ebiten.NewImageFromImage(imgLargeMenuSprites)
 }
 
 func (gs *graphic) createTileImages() {
